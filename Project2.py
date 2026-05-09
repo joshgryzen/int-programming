@@ -47,35 +47,35 @@ def get_distance(node1, node2):
 # Repeat until all nodes are visted
 
 def get_next_neighbor(current_index, current_position, visited, distances, remaining_cities):
-    closest_neighbor = current_index
-    closest_position = current_position
-    distance = math.inf
-    for next_index, next_position in remaining_cities:
-        if next_index in visited or current_index == next_index:
-                continue
-        neighbor_distance = get_distance(current_position, next_position)
-        print("Distance from ", current_index, "to ", next_index, "is ", neighbor_distance)
-        if distance > neighbor_distance:
-            distance = neighbor_distance
-            closest_neighbor = next_index
-            closest_position = next_position
-    visited.append(closest_neighbor)
-    distances.append(distance)
-    print(remaining_cities)
-    remaining_cities.remove((closest_neighbor, closest_position))
-    if remaining_cities:
-         return get_next_neighbor(closest_neighbor, closest_position, visited, distances, remaining_cities)
+    while remaining_cities:
+        closest_neighbor = current_index
+        closest_position = current_position
+        distance = math.inf
+        for next_index, next_position in remaining_cities:
+            if next_index in visited or current_index == next_index:
+                    continue
+            neighbor_distance = get_distance(current_position, next_position)
+            print("Distance from ", current_index, "to ", next_index, "is ", neighbor_distance)
+            if distance > neighbor_distance:
+                distance = neighbor_distance
+                closest_neighbor = next_index
+                closest_position = next_position
+        visited.append(closest_neighbor)
+        distances.append(distance)
+        remaining_cities.remove((closest_neighbor, closest_position))
+        current_index = closest_neighbor
+        current_position = closest_position
+    # go back to the start now
+    final_position = df.iloc[visited[-1]]
+    print(final_position)
+    final_distance = get_distance(final_position, initial_position)
+    distances.append(final_distance)
+    visited.append(0)
     return visited, distances
 
-initial_index, initial_position = cities.pop(0)
-route, distances = get_next_neighbor(initial_index, initial_position, [initial_index], [0], cities)
-
-# go back to the start now
-final_position = df.iloc[route[-1]]
-print(final_position)
-final_distance = get_distance(initial_position, final_position)
-distances.append(final_distance)
-route.append(0)
+initial_index, initial_position = cities[0]
+remaining_cities = cities[1:]
+route, distances = get_next_neighbor(initial_index, initial_position, [initial_index], [0], remaining_cities)
 
 print("Route: ", route)
 print("Distances: ", distances)
