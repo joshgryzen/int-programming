@@ -79,3 +79,8 @@ route.append(0)
 
 print("Route: ", route)
 print("Distances: ", distances)
+total_distance = 0
+for distance in distances:
+     total_distance += distance
+
+print("Total distance: ", total_distance)
