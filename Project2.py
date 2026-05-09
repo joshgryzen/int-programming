@@ -17,7 +17,7 @@ parser.add_argument(
     "-d",
     "--distance_type",
     choices=['euclidean', 'manhattan'], 
-    default='euclidean',
+    default='manhattan',
     help="Select distance type: euclidean or manhattan",
 )
 
@@ -40,47 +40,57 @@ def get_distance(node1, node2):
     else: 
         return abs(x2-x1) + abs(y2-y1)    
 
+def get_neighbor(remaining_cities, visited, current_index, current_position):
+    distance = math.inf
+    closest_neighbor = current_index
+    closest_position = current_position
+    for next_index, next_position in remaining_cities:
+        if next_index in visited or current_index == next_index:
+                continue
+        neighbor_distance = get_distance(current_position, next_position)
+        # print("Distance from ", current_index, "to ", next_index, "is ", neighbor_distance)
+        if distance > neighbor_distance:
+            distance = neighbor_distance
+            closest_neighbor = next_index
+            closest_position = next_position
+            
+    return closest_neighbor, closest_position, distance
+
 # ========================================== Basic Nearest Neighbor ==========================================
 
 # Start at the first node
 # Find the closest unvisted node and travel there
 # Repeat until all nodes are visted
 
-def get_next_neighbor(current_index, current_position, visited, distances, remaining_cities):
+def get_route(current_index, current_position, visited, distances, remaining_cities):
     while remaining_cities:
-        closest_neighbor = current_index
-        closest_position = current_position
-        distance = math.inf
-        for next_index, next_position in remaining_cities:
-            if next_index in visited or current_index == next_index:
-                    continue
-            neighbor_distance = get_distance(current_position, next_position)
-            print("Distance from ", current_index, "to ", next_index, "is ", neighbor_distance)
-            if distance > neighbor_distance:
-                distance = neighbor_distance
-                closest_neighbor = next_index
-                closest_position = next_position
+        closest_neighbor, closest_position, distance = get_neighbor(remaining_cities, visited, current_index, current_position)
         visited.append(closest_neighbor)
         distances.append(distance)
         remaining_cities.remove((closest_neighbor, closest_position))
         current_index = closest_neighbor
         current_position = closest_position
+    
     # go back to the start now
     final_position = df.iloc[visited[-1]]
+    initial_position = df.iloc[visited[0]]
     print(final_position)
     final_distance = get_distance(final_position, initial_position)
     distances.append(final_distance)
     visited.append(0)
     return visited, distances
 
-initial_index, initial_position = cities[0]
-remaining_cities = cities[1:]
-route, distances = get_next_neighbor(initial_index, initial_position, [initial_index], [0], remaining_cities)
+def basic_nearest_neighbor(cities):
+    initial_index, initial_position = cities[0]
+    remaining_cities = cities[1:]
+    route, distances = get_route(initial_index, initial_position, [initial_index], [0], remaining_cities)
 
-print("Route: ", route)
-print("Distances: ", distances)
-total_distance = 0
-for distance in distances:
-     total_distance += distance
+    print("Route: ", route)
+    print("Distances: ", distances)
+    total_distance = 0
+    for distance in distances:
+        total_distance += distance
 
-print("Total distance: ", total_distance)
+    print("Total distance: ", total_distance)
+
+# basic_nearest_neighbor(cities)
