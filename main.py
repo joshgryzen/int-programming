@@ -1,0 +1,99 @@
+import argparse
+import pandas as pd
+
+from helpers import (
+    compute_route_distance,
+    get_distance
+)
+
+from neighbor import (
+    basic_nearest_neighbor
+)
+
+from simulated_anneal import (
+    simulated_annealing
+)
+
+# ========================================== Args ==========================================
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-i",
+    "--input",
+    required=True,
+    type=str,
+    help="Path to input .csv file",
+)
+
+parser.add_argument(
+    "-d",
+    "--distance_type",
+    choices=['euclidean', 'manhattan'],
+    default='euclidean',
+    help="Select distance type",
+)
+
+parser.add_argument(
+    "-r",
+    "--random_type",
+    choices=['swap', 'reverse'],
+    default='swap',
+    help="Select distance type",
+)
+
+args = parser.parse_args()
+
+file = args.input
+
+# ========================================== Load Cities ==========================================
+
+df = pd.read_csv(file, names=["x", "y"])
+
+cities = [(pos, tuple(row)) for pos, row in df.iterrows()]
+
+# ========================================== Distance Matrix ==========================================
+
+distance_matrix = {}
+
+for index1, position1 in cities:
+
+    distance_matrix[index1] = {}
+
+    for index2, position2 in cities:
+
+        distance_matrix[index1][index2] = get_distance(
+            position1,
+            position2,
+            distance_type = args.distance_type
+        )
+
+# ========================================== Initial Solution ==========================================
+
+initial_route = basic_nearest_neighbor(
+    cities,
+    distance_matrix
+)
+
+initial_distance = compute_route_distance(
+    initial_route,
+    distance_matrix
+)
+
+print("Initial Route:", initial_route)
+print("Initial Distance:", initial_distance)
+
+# ========================================== Simulated Annealing ==========================================
+
+best_route, best_distance, history = simulated_annealing(
+    initial_route=initial_route,
+    distance_matrix=distance_matrix,
+    initial_temperature=1000,
+    cooling_rate=0.99995,
+    stopping_temperature=0.00001,
+    max_iterations=100000,
+    random_type = args.random_type
+)
+
+print("Best Route:", best_route)
+print("Best Distance:", best_distance)
