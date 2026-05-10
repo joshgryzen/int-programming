@@ -105,9 +105,9 @@ print("estimated_freezing_temperature", estimated_freezing_temperature)
 best_route, best_distance, history = simulated_annealing(
     initial_route=initial_route,
     distance_matrix=distance_matrix,
-    initial_temperature=10,
+    initial_temperature=100,
     cooling_rate=0.99995,
-    stopping_temperature=estimated_freezing_temperature,
+    stopping_temperature=0.1,
     random_type=args.random_type,
     max_iterations=100000000
 )
@@ -119,28 +119,28 @@ print("Best Distance:", best_distance)
 
 plot_convergence(
     history,
-    output_file= name + "_convergence.png"
+    output_file= name + "_tiny_stopping_point_convergence.png"
 )
 
 plot_route(
     initial_route,
     cities,
     title="Initial Nearest Neighbor Route",
-    output_file=name + "_initial_route.png"
+    output_file=name + "_tiny_stopping_point_initial_route.png"
 )
 
 plot_route(
     best_route,
     cities,
     title="Final Simulated Annealing Route",
-    output_file= name + "_final_route.png"
+    output_file= name + "_tiny_stopping_point_final_route.png"
 )
 
 plot_route_comparison(
     initial_route,
     best_route,
     cities,
-    output_file= name + "_route_comparison.png"
+    output_file= name + "_tiny_stopping_point_route_comparison.png"
 )
 
 

@@ -83,7 +83,7 @@ def simulated_annealing(
     while (temperature > stopping_temperature and iteration < max_iterations):
         # HUGE improvement!
         # Go back to the best route found so far after decrementing temperature!
-        current_route = best_route.copy()
+        # current_route = best_route.copy()
         # Generate a neighborhood (sets of neighbors)
         for _ in range(states_per_temperature):
             if random_type == "reverse":
@@ -129,18 +129,6 @@ def simulated_annealing(
 
             if iteration >= max_iterations:
                 break
-            # print(
-            #     "Temp:",
-            #     temperature,
-            #     "Current:",
-            #     current_distance,
-            #     "Neighbor:",
-            #     neighbor_distance,
-            #     "Delta:",
-            #     delta,
-            #     "Prob:",
-            #     probability
-            # )
         # Cool temperature to find new neighborhood
         temperature = update_temperature(
             temperature,
