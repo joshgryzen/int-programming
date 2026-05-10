@@ -26,3 +26,26 @@ def compute_route_distance(route, distance_matrix):
         total_distance += distance_matrix[current_city][next_city]
 
     return total_distance
+
+def compute_freezing_temperature(
+    best_distance,
+    neighbor_distance,
+    v
+):
+    """
+    Estimate freezing temperature using:
+
+        Tf = (Em' - Em) / ln(v)
+    """
+
+    delta = neighbor_distance - best_distance
+
+    # avoid divide-by-zero / invalid logs
+    if v <= 1:
+        v = 2
+
+    # avoid negative temperatures
+    if delta <= 0:
+        delta = 0.0001
+
+    return delta / math.log(v)

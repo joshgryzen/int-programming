@@ -3,7 +3,8 @@ import pandas as pd
 
 from helpers import (
     compute_route_distance,
-    get_distance
+    get_distance,
+    compute_freezing_temperature
 )
 
 from neighbor import (
@@ -85,14 +86,20 @@ print("Initial Distance:", initial_distance)
 
 # ========================================== Simulated Annealing ==========================================
 
+# estimated_freezing_temperature = compute_freezing_temperature(
+#     best_distance=initial_distance,
+#     neighbor_distance=initial_distance + 10,
+#     v=5
+# )
+# print("estimated_freezing_temperature", estimated_freezing_temperature)
 best_route, best_distance, history = simulated_annealing(
     initial_route=initial_route,
     distance_matrix=distance_matrix,
     initial_temperature=1000,
     cooling_rate=0.99995,
     stopping_temperature=0.00001,
-    max_iterations=100000,
-    random_type = args.random_type
+    random_type=args.random_type,
+    max_iterations=100000
 )
 
 print("Best Route:", best_route)
