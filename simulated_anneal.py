@@ -51,7 +51,8 @@ def update_temperature(temperature, cooling_rate):
     # print("New temperature: ", temperature * cooling_rate)
     return temperature * cooling_rate
 
-# states_per_temperature = 10, 50, 100, 500 for tiny, small, medium, large
+# for testing states_per_temperature = 10, 50, 100, 500 for tiny, small, medium, large
+# 500 takes too long
 def simulated_annealing(
     initial_route,
     distance_matrix,

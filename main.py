@@ -15,6 +15,12 @@ from simulated_anneal import (
     simulated_annealing
 )
 
+from visualization import (
+    plot_convergence,
+    plot_route,
+    plot_route_comparison
+)
+
 # ========================================== Args ==========================================
 
 parser = argparse.ArgumentParser()
@@ -46,6 +52,9 @@ parser.add_argument(
 args = parser.parse_args()
 
 file = args.input
+name = file.split('.')[0]
+name = name.split('/')[1]
+name = "outputs/" + name
 
 # ========================================== Load Cities ==========================================
 
@@ -91,6 +100,7 @@ estimated_freezing_temperature = compute_freezing_temperature(
     neighbor_distance=initial_distance + 10,
     v=5
 )
+
 print("estimated_freezing_temperature", estimated_freezing_temperature)
 best_route, best_distance, history = simulated_annealing(
     initial_route=initial_route,
@@ -104,3 +114,38 @@ best_route, best_distance, history = simulated_annealing(
 
 print("Best Route:", best_route)
 print("Best Distance:", best_distance)
+
+# ========================================== Visualizations ==========================================
+
+plot_convergence(
+    history,
+    output_file= name + "_convergence.png"
+)
+
+plot_route(
+    initial_route,
+    cities,
+    title="Initial Nearest Neighbor Route",
+    output_file=name + "_initial_route.png"
+)
+
+plot_route(
+    best_route,
+    cities,
+    title="Final Simulated Annealing Route",
+    output_file= name + "_final_route.png"
+)
+
+plot_route_comparison(
+    initial_route,
+    best_route,
+    cities,
+    output_file= name + "_route_comparison.png"
+)
+
+
+print(
+    "size: ", len(cities),
+    "initial_distance: ", initial_distance,
+    "best_distance: ", best_distance
+)
