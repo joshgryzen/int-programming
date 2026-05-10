@@ -34,8 +34,8 @@ def generate_neighbor_by_reverse(route):
     neighbor_route = route.copy()
 
     # Pick two random internal indices
-    idx1 = random.randint(1, len(neighbor_route) - 2)
-    idx2 = random.randint(1, len(neighbor_route) - 2)
+    idx1 = random.randint(1, len(neighbor_route) - 1)
+    idx2 = random.randint(1, len(neighbor_route) - 1)
 
     # Ensure start <= end
     start, end = sorted([idx1, idx2])
@@ -80,7 +80,9 @@ def simulated_annealing(
     history = [best_distance]
 
     while (temperature > stopping_temperature and iteration < max_iterations):
-
+        # HUGE improvement!
+        # Go back to the best route found so far after decrementing temperature!
+        current_route = best_route.copy()
         # Generate a neighborhood (sets of neighbors)
         for _ in range(states_per_temperature):
             if random_type == "reverse":
@@ -126,7 +128,18 @@ def simulated_annealing(
 
             if iteration >= max_iterations:
                 break
-
+            # print(
+            #     "Temp:",
+            #     temperature,
+            #     "Current:",
+            #     current_distance,
+            #     "Neighbor:",
+            #     neighbor_distance,
+            #     "Delta:",
+            #     delta,
+            #     "Prob:",
+            #     probability
+            # )
         # Cool temperature to find new neighborhood
         temperature = update_temperature(
             temperature,

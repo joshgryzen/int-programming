@@ -46,7 +46,7 @@ def get_route(current_index, current_position, visited, remaining_cities, distan
         current_position = closest_position
 
     # go back to the start now
-    visited.append(0)
+    # visited.append(0)
     
     return visited
 

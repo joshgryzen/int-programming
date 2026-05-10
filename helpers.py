@@ -18,12 +18,17 @@ def compute_route_distance(route, distance_matrix):
 
     total_distance = 0
 
-    for i in range(len(route) - 1):
+    for i in range(len(route)):
 
         current_city = route[i]
-        next_city = route[i + 1]
 
-        total_distance += distance_matrix[current_city][next_city]
+        next_city = route[
+            (i + 1) % len(route)
+        ]
+
+        total_distance += (
+            distance_matrix[current_city][next_city]
+        )
 
     return total_distance
 
